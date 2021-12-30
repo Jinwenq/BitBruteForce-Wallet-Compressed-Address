@@ -1,4 +1,4 @@
-# BitBruteForce-Wallet
+# BitBruteForce-Wallet (Only uncompressed Addess!)
 This is an effective script to Brute Force, the Private Key of any Bitcoin Public Address.
 
 How does the script work? 
