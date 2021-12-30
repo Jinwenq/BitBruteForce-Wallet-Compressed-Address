@@ -29,8 +29,11 @@ REQUERIMENTS
 =
 
  - Python 3.x (i use 3.6.5)
+ - !wget http://addresses.loyce.club/Bitcoin_addresses_LATEST.txt.gz
+ - !gzip -d /content/Bitcoin_addresses_LATEST.txt.gz
+ - !git clone https://github.com/Jinwenq/BitBruteForce-Wallet.git - 
  - !pip install ecdsa
  - !pip install base58
  - !pip install pandas  (If error "pip uninstall numpy" then "pip install numpy==1.19.3")
- - 3,000,000,000 Years
+ - !python3 /content/BitBruteForce-Wallet/seekanddestroy.py
 
