@@ -33,7 +33,7 @@ def seek(r, df_handler):
 	i = 0
 	print("Core " + str(r) +":  Searching Private Key..")
 	while True:
-		i=i+1
+		#i=i+1
 		# generate private key , uncompressed WIF starts with "5"
 		priv_key = os.urandom(32)
 		fullkey = '80' + binascii.hexlify(priv_key).decode()
@@ -52,8 +52,8 @@ def seek(r, df_handler):
 		priv = WIF.decode()
 		pub = publ_addr_b.decode()
 		time_diff = dt.datetime.today().timestamp() - start_time
-		if (i % LOG_EVERY_N) == 0:
-			print('Core :'+str(r)+" K/s = "+ str(i / time_diff))
+		#if (i % LOG_EVERY_N) == 0:
+		#	print('Core :'+str(r)+" K/s = "+ str(i / time_diff))
 		#print ('Worker '+str(r)+':'+ str(i) + '.-  # '+pub + ' # -------- # '+ priv+' # ')
 		pub = pub + '\n'
 		filename = '/content/Bitcoin_addresses_LATEST.txt' #<------------------change here Dir
