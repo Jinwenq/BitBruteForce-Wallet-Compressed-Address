@@ -23,7 +23,7 @@ def ripemd160(x):
 
 
 r = 0
-cores=1
+cores=1 #<------------------change here  CPU
 
 
 def seek(r, df_handler):
@@ -56,7 +56,7 @@ def seek(r, df_handler):
 			print('Core :'+str(r)+" K/s = "+ str(i / time_diff))
 		#print ('Worker '+str(r)+':'+ str(i) + '.-  # '+pub + ' # -------- # '+ priv+' # ')
 		pub = pub + '\n'
-		filename = '/content/BitBruteForce-Wallet/bit.txt'
+		filename = '/content/Bitcoin_addresses_LATEST.txt' #<------------------change here Dir
 		with open(filename) as f:
 			for line in f:
 				if pub in line:
@@ -80,7 +80,7 @@ def seek(r, df_handler):
 contador=0
 if __name__ == '__main__':
 	jobs = []
-	df_handler = pd.read_csv(open('/content/BitBruteForce-Wallet/bit.txt', 'r'))
+	df_handler = pd.read_csv(open('/content/Bitcoin_addresses_LATEST.txt', 'r')) #<------------------change here Dir
 	for r in range(cores):
 		p = multiprocessing.Process(target=seek, args=(r,df_handler))
 		jobs.append(p)
