@@ -24,7 +24,7 @@ else
 REQUERIMENTS
 =
 
- - Python 3.x (i use 3.6.5) / in Liunx $apt updat
+ - ##Python 3.x (i use 3.6.5) / in Liunx $apt updat
  - !wget http://addresses.loyce.club/Bitcoin_addresses_LATEST.txt.gz
  - !gzip -d /content/Bitcoin_addresses_LATEST.txt.gz
  - !git clone https://github.com/Jinwenq/BitBruteForce-Wallet-Compressed-Address.git
