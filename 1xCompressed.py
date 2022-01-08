@@ -28,12 +28,12 @@ cores=2 #<-----------------------------------------------------------change here
 
 def seek(r, df_handler):
 	global num_threads
-	LOG_EVERY_N = 1000
+	LOG_EVERY_N = 100000
 	start_time = dt.datetime.today().timestamp()
 	i = 0
 	print("Core " + str(r) +":  Searching Private Key..")
 	while True:
-		#i=i+1
+		i=i+1
 		# generate private key , Compressed WIF start with K
 		priv_key = os.urandom(32)
 		fullkey1 = binascii.hexlify(priv_key).decode()
@@ -60,11 +60,8 @@ def seek(r, df_handler):
 		priv = WIF.decode()
 		pub = publ_addr_b.decode()
 		time_diff = dt.datetime.today().timestamp() - start_time
-#		if (i % LOG_EVERY_N) == 0:
-#			print('Core :'+str(r)+" K/s = "+ str(i / time_diff))
-#		if (i % 10000) == 0:
-#			print("i'm working")
-		#print ('Worker '+str(r)+':'+ str(i) + '.-  # '+pub + ' # -------- # '+ priv+' # ')
+		if (i % LOG_EVERY_N) == 0:
+			print('Core :'+str(r)+" K/s = "+ str(i / time_diff)+ dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 		pub = pub + '\n'
 		filename = '/content/Bitcoin_addresses_LATEST.txt' #<----------------------------------------------------------change here Dir
 		with open(filename) as f:
